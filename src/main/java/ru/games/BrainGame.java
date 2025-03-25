@@ -1,6 +1,7 @@
 package ru.games;
 
 import ru.GameEngine;
+import ru.utils.GameUtil;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -27,26 +28,15 @@ public class BrainGame {
    *
    * @return Двумерный массив с вопросами и ответами.
    */
-  private static String[][] generateRounds() {
-    String[][] roundsData = new String[ROUNDS_COUNT][2];
-    for (int i = 0; i < ROUNDS_COUNT; i++) {
-      roundsData[i] = generateRound();
-    }
-    return roundsData;
-  }
+  public static String[][] generateRounds() {
+    return GameUtil.generateRounds(ROUNDS_COUNT, () -> {
+      int num1 = getRandomNumber();
+      int num2 = getRandomNumber();
+      int num3 = getRandomNumber();
+      int correctAnswer = lcm(num1, lcm(num2, num3));
 
-  /**
-   * Генерирует один раунд игры (три случайных числа и их НОК).
-   *
-   * @return Массив из вопроса и правильного ответа.
-   */
-  private static String[] generateRound() {
-    int num1 = getRandomNumber();
-    int num2 = getRandomNumber();
-    int num3 = getRandomNumber();
-    int correctAnswer = lcm(num1, lcm(num2, num3));
-
-    return new String[]{num1 + " " + num2 + " " + num3, String.valueOf(correctAnswer)};
+      return new String[]{num1 + " " + num2 + " " + num3, String.valueOf(correctAnswer)};
+    });
   }
 
   /**

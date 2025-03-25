@@ -1,6 +1,7 @@
 package ru.games;
 
 import ru.GameEngine;
+import ru.utils.GameUtil;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -27,30 +28,19 @@ public class GeometryProgressionGame {
    *
    * @return Двумерный массив с вопросами и ответами.
    */
-  private static String[][] generateRounds() {
-    String[][] roundsData = new String[ROUNDS_COUNT][2];
-    for (int i = 0; i < ROUNDS_COUNT; i++) {
-      roundsData[i] = generateRound();
-    }
-    return roundsData;
-  }
+  public static String[][] generateRounds() {
+    return GameUtil.generateRounds(ROUNDS_COUNT, () -> {
+      int length = getRandomLength();
+      int start = getRandomStart();
+      int ratio = getRandomRatio();
+      int hiddenIndex = getRandomHiddenIndex(length);
 
-  /**
-   * Генерирует один раунд игры (геометрическая прогрессия).
-   *
-   * @return Массив из вопроса и правильного ответа.
-   */
-  private static String[] generateRound() {
-    int length = getRandomLength();
-    int start = getRandomStart();
-    int ratio = getRandomRatio();
-    int hiddenIndex = getRandomHiddenIndex(length);
+      int[] progression = generateProgression(length, start, ratio);
+      int correctAnswer = progression[hiddenIndex];
+      progression[hiddenIndex] = -1;
 
-    int[] progression = generateProgression(length, start, ratio);
-    int correctAnswer = progression[hiddenIndex];
-    progression[hiddenIndex] = -1;
-
-    return new String[]{formatProgression(progression), String.valueOf(correctAnswer)};
+      return new String[]{formatProgression(progression), String.valueOf(correctAnswer)};
+    });
   }
 
   /**
